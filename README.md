@@ -1,0 +1,127 @@
+# Julstök med ART of Code
+
+**Utgå från det här startrepot för att delta.** Skapa ditt eget publika repo med **Use this template → Create a new repository**. Behåll filerna under `.github/`; de färdigkonfigurerade GitHub Actions-flödena registrerar repot och skickar dina lösningar till analys. Mallen har workflow, båda spåren och instruktioner klara. Du behöver ingen inloggning på vår sajt och ingen API-nyckel till oss.
+
+**Alla deltagare visas på sajten.** När din första push har registrerats visas ditt namn, din presentation och repolänk på förstasidan. Du behöver ingen färdig lösning. Att bara gå med i AoC-listan registrerar dig inte här.
+
+## Registrera dig i tre steg
+
+Du kan göra hela registreringen i webbläsaren. [Haka på](https://aoc.artofcode.se/kom-igang/) visar samma steg med årsväljare och kopierbar gruppkod.
+
+1. **Gå med på AoC.** Logga in och gå med i ART of Codes [privata lista](https://adventofcode.com/2025/leaderboard/private) med koden `1487429-4647410c`. Hämta också ditt numeriska AoC-ID i [Settings](https://adventofcode.com/2025/settings): siffrorna efter `#` i **Anonymous User #123456**. Du behöver inte välja alternativet eller ändra namn. Samma gruppkod gäller för 2025 och 2026.
+2. **Skapa ditt repo från mallen.** På [advent-starter](https://github.com/artofcode-se/advent-starter) väljer du **Use this template → Create a new repository**, ditt personliga GitHub-konto och **Public**. Skapa ett repo per år. Har du redan skapat ditt repo från mallen är detta klart. Behåll `.github/` med de färdigkonfigurerade Actions-flödena.
+3. **Fyll i och spara.** Öppna `advent.json` i ditt nya repo på GitHub och klicka på pennan. Fyll i `aoc_user_id`, `display_name` och `year`: 2025 för övning eller 2026 för premiären. Lägg gärna till `bio`, en valfri presentation på högst 160 tecken. Välj **Commit changes** och spara till repots default branch, vanligtvis `main`. Du kan också redigera lokalt, committa och pusha. Workflowet registrerar GitHub-konto och repo automatiskt.
+
+**Klart när ditt namn syns på [förstasidan](https://aoc.artofcode.se/#deltagare).** Det sker inom ungefär en minut efter lyckad registrering. I **Actions → Publicera Advent-lösningar → senaste körningen** ser du om den har tagits emot. Ditt AoC-medlemskap bekräftas vid nästa synk, normalt inom 15 minuter; därefter syns du även på topplistorna. Du behöver ingen färdig lösning. Förstasidan samlar dina årsrepon i samma presentation, med årsmärken och ett filter för anmälningsår.
+
+Vi litar på att du anger ditt eget AoC-ID. GitHub bekräftar repo och ägare; AoC-listan bekräftar medlemskap, inte kontoägarskap. Om AoC-resultaten inte visas, kontrollera ID, år och gruppmedlemskap. Rätta filen och spara igen. Kontakta ART of Code om ett redan anslutet ID är fel.
+
+## Registrerad? Börja koda
+
+Klona ditt nya repo och välj **eget hantverk**, där du skriver lösningen själv utan generativ AI, eller **automatiserat agentsystem**, där du bygger systemet som löser uppgiften. Du kan prova båda spåren i samma repo.
+
+**Målet för agentspåret är ett automatiserat flöde med så lite mänsklig inblandning som möjligt.** Du bygger och konfigurerar systemet i `agent/`. Efter start driver det arbetet: hämta uppgift → skriv kod → testa → rätta fel och testa igen → lämna svar → publicera lösningen i `days/NN/agent/`.
+
+Du får använda AI när du bygger systemet. Att själv styra en chatt som löser dagens pussel är AI-assisterad problemlösning och uppfyller inte i sig agentspårets mål. Börja gärna med ett steg och bygg vidare. Redovisa i README vad som var automatiserat, när du behövde ingripa och vad du vill automatisera härnäst. Försök med mänsklig hjälp är också välkomna.
+
+Skriv lösning, egna tester, Dockerfile och README under `days/01/manual/` eller `days/01/agent/`. Lägg själva koden i `src/`; du behöver ingen extra config-fil. Lämna svaret på AoC och pusha koden. Workflowet registrerar versionen; servern väntar på godkännande för rätt år, dag och del innan den analyserar. Fortsätt förbättra och pusha när du vill. Historiken sparar nya commits; samma commit ger inga dubbletter. Workflowet kan också startas manuellt via **Run workflow**.
+
+[Förstå startrepot, fil för fil](https://aoc.artofcode.se/startrepot/) visar vad varje fil gör och hur pushflödet fungerar.
+
+För testmiljön kan en repository variable `ADVENT_API_URL` peka på test-API:ts `/api/v1/github/push`. Standard är produktion på `https://aoc.artofcode.se/api/v1/github/push`. GitHub Actions behöver `contents: read` och `id-token: write`, vilket redan är angivet i workflowet. Token skapas kortvarigt av GitHub; du ska inte skapa en egen nyckel.
+
+## När är analysen färdig?
+
+1. **Du är registrerad.** `advent.json` innehåller rätt år och ditt numeriska AoC-ID. Repot är publikt på ditt personliga GitHub-konto och ID:t finns i vår AoC-grupp för samma år.
+2. **Koden är pushad till `main`** (eller repots default branch). Lägg lösningen i `days/NN/manual/src/` eller `days/NN/agent/src/`, där `NN` är två siffror, exempelvis `01`. Minst en källfil måste innehålla text. Tomma mappar och undervisningsexemplen registreras inte.
+3. **Publiceringen har lyckats.** Öppna **Actions → Publicera Advent-lösningar → senaste körningen**. Sammanfattningen visar hur många dagslösningar som registrerades. En grön körning betyder att API:t har tagit emot versionen; analysen kan fortfarande vänta.
+4. **Rätt år, dag och del är godkända på AoC.** Vi hämtar resultat högst en gång per kvart. Del 1 kan analyseras även om del 2 återstår. AoC godkänner ditt svar, inte en viss GitHub-commit.
+5. **Workern har läst och analyserat koden.** När AoC-godkännandet finns startar analysen via vår kö, där flera lösningar kan behandlas samtidigt. Förbättringar av en redan godkänd uppgift behöver inte vänta på nästa AoC-synk. Resultatet kan sedan dröja upp till en minut i sidans cache. Om GitHubs API-kvot är slut väntar vi tills GitHub tillåter nya anrop och fortsätter automatiskt; du behöver inte pusha igen. När resultatet finns under **Topplistor → Kodrader**, med rätt år, dag, del och spår samt länk till den analyserade versionen, är analysen färdig.
+
+**Ingen `solution.json` behövs för standardstrukturen.** Språket identifieras automatiskt. Båda delarna registreras som standard och väntar var för sig på AoC-godkännande. Om programmet bara stöder en del kan du begränsa det med den valfria konfigurationen nedan.
+
+Lägg egna tester i `tests/`, och dokumentera körning och huvudidé i README. Skriv en Dockerfile så att andra kan prova lösningen. De är en del av vår övning i att dela körbar, begriplig kod, men dagens statiska analys kräver eller kör inte Docker eller testerna. En modellrapport är valfri och behövs endast för att dina AI-modeller ska kunna räknas.
+
+Analysen läser högst 40 textfiler, 100 kB per fil och 1 MB totalt. Koden ska vara UTF-8. Beroenden, byggartefakter, README, rapporter och kända binärfiler räknas inte. Inputfiler, privata kataloger, hemligheter, loggar och symlänkar ska inte finnas i analysområdet; upptäckta sådana filer stoppar analysen. En tom eller felaktig analys blir inte ett resultat med noll kodrader.
+
+### Bara om du behöver en annan struktur
+
+Skapa `solution.json` i dagslösningens mapp **endast om du behöver ändra standardvalen**. Exempel för kod i `code/`, bara del 1 och egen delad kod:
+
+```json
+{
+  "source_paths": ["code"],
+  "parts": [1],
+  "shared_paths": ["shared/manual"]
+}
+```
+
+Alla fält är valfria. Utan filen används `source_paths: ["src"]`, `parts: [1, 2]` och `shared_paths: []`. Källkodsmapparna anges relativt dagens spårmapp, exempelvis `days/01/manual/`. Delade filer eller mappar anges från repots rot och måste ligga under `shared/`. Ange bara egen kod som lösningen faktiskt använder; den räknas med i kodraderna. Sökvägar får inte lämna dagsmappen med `../`. Tester ligger separat under `tests/`. Du ska inte ange programmeringsspråk.
+
+
+`parts` betyder **vilka delar av dagens AoC-uppgift som koden stöder**:
+
+- `[1]`: bara del 1.
+- `[2]`: bara del 2.
+- `[1, 2]`: både del 1 och del 2.
+
+Varje del väntar på sitt eget AoC-godkännande. Har bara del 1 godkänts kan den analyseras medan del 2 väntar. `parts` väljer inte källfiler: hela den angivna källkodsmappen räknas för varje del, så samma kodversion får samma kodradsantal på båda listorna. Även om du har separata filer för delarna räknas båda om de ligger i den mapp som analyseras.
+
+Det är en annan sak än `--part 1` eller `--part 2`, som väljer vilken del programmet ska köra när du testar det själv. Workern kör inte programmet. Om koden bara löser del 1 anger du `"parts": [1]`; när den stöder båda kan du ta bort fältet eller hela config-filen om övriga standardval passar.
+
+Äldre filer med `schema_version: 1` och `language` fungerar fortfarande, men språkfältet används inte. Ta bort filen om du använder standardvalen. Vid ändring av en dagslösning, dess konfiguration eller gemensam kod registrerar nästa push en ny version för analys.
+
+## Hitta i repot
+
+```text
+agent/                    Ditt eget agentsystem och dess instruktioner
+days/01/manual/           Din egen dagslösning
+days/01/agent/            Agentens producerade dagslösning
+shared/                   Din återanvändbara kod
+days/01/agent/run.json     Valfri rapport över verktyg och modeller
+runs/                     Dokumentation av rapportformatet
+examples/2025/day01/      Två färdiga undervisningsexempel (spoilers)
+.private/                 Dina privata indata och lokala loggar; aldrig Git
+.github/workflows/        Pushflödet till ART of Codes API
+```
+
+Färdiga exempel ligger utanför `days/` och registreras inte som dina egna lösningar. Båda skapades med AI-stöd för undervisning. Hantverksexemplet visar arbetssättet; det är inte en deltagares handskrivna tävlingsinlämning. Agentexemplet visar en producerad dagslösning, inte ett färdigt automatiserat agentsystem.
+
+## Körkontrakt för dina lösningar
+
+Dockerfile beskriver hur språk, beroenden och kod sätts ihop till en körmiljö. Det gör att andra kan klona ditt repo och prova lösningen med Docker, utan att installera ditt språk lokalt. Att själv beskriva miljön, testa den och dokumentera körningen är en del av övningen.
+
+Bygg från repots rot med en Dockerfile per dag och spår:
+
+```sh
+docker build -f days/01/manual/Dockerfile -t advent-day01 .
+docker run --rm -i advent-day01 --part 1 < .private/inputs/01.txt
+```
+
+Programmet läser stdin, skriver svaret på stdout och diagnostik på stderr. Dina privata indata skickas in först vid körning; de ska inte byggas in i imagen. `.dockerignore` utesluter `.private/` från byggkontexten. Publicera egna små testdata som andra kan använda utan tillgång till dina AoC-indata.
+
+Dag-1-exemplens Dockerfiles kör tester under bygget. Startrepots workflow **Verify teaching examples** bygger dessutom båda exempelcontainrarna och kontrollerar CLI:t för båda delarna med egna testdata. Detta workflow gäller exemplen; lägg till motsvarande kontroll för dina egna `days/`-lösningar om du vill ha den i CI.
+
+Vår server gör i dagsläget statisk analys och kör inte deltagarkod eller Dockerfiles. Dockerfile räknas som infrastruktur, separat från lösningens kodrader. Vi mäter eller rangordnar ingen exekveringstid. Docker ger ett gemensamt sätt att starta programmen, men en rättvis prestandajämförelse skulle även behöva samma testdata, hårdvara, resursgränser och upprepade mätningar.
+
+I agentspåret kör dagens container den producerade lösningen. Själva agentsystemet och instruktionerna för att köra det hör hemma i `agent/`; att köra dagslösningen startar inte en AI-modell.
+
+## Gör det lätt att lära av dig
+
+Beskriv installation och versioner, körkommandon, tester, kodens huvudidé och ett förbättringsförslag. För agenten: dela instruktioner, verktyg/modeller, hur den startas och hur man ändrar flödet. Länka till inspiration. Topplistorna länkar till ditt repo så att andra kan förstå, prova och bygga vidare.
+
+## Modeller och topplistor
+
+Låt agenten skriva en valfri `run.json` i agentens dagsmapp, exempelvis `days/01/agent/run.json`. Se [rapportformatet](runs/README.md). Rapportera faktiskt modell-ID från anropets svar, inte bara verktygsnamnet. Modeller märks alltid som självrapporterade. Samma modell räknas en gång per år; nya versioner och språk finns kvar i historiken.
+
+Kodrader jämförs per dag och del. **Alla** visar både hantverk och agent, med en märkt rad per deltagare och spår. Har du lösningar i båda spåren syns båda, med den senaste färdiga analysen för respektive spår. Du kan också filtrera på ett spår. Inlämningstid ger inga poäng.
+
+## Öppet och privat
+
+- Publicera egen kod, tester med egna data, Dockerfiles och agentinstruktioner.
+- Publicera aldrig AoC:s uppgiftstext, personliga inputfiler, sessionscookies, modellnycklar eller råa agentloggar.
+- `.gitignore` och `.dockerignore` hjälper men tar inte bort filer som redan checkats in.
+- Deltagandet är publikt: namn, valfri presentation och repolänk visas efter första registrerade pushen. AoC-medlemskap öppnar för stjärnor och analyser.
+- Redovisa modeller och mänskliga ingripanden ärligt. Okända mätvärden ska inte gissas.
+
+[Onboarding och spelregler](https://aoc.artofcode.se/kom-igang/) · [Stöd Eric Wastl och Advent of Code](https://adventofcode.com/2026/support)
